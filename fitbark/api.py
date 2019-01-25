@@ -228,10 +228,11 @@ class FitBark(object):
     def make_request(self, *args, **kwargs):
         # This should handle data level errors, improper requests, and bad
         # serialization
+        root = kwargs.pop('root')
+
         headers = kwargs.get('headers', {})
         headers.update({'Accept-Language': self.system})
         kwargs['headers'] = headers
-        root = kwargs.get('root')
 
         method = kwargs.get('method', 'PUT' if 'data' in kwargs else 'GET')
         response = self.client.make_request(*args, **kwargs)
