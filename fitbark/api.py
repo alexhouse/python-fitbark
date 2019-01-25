@@ -37,7 +37,7 @@ class FitBarkOauth2Client(object):
 
         self.client_id, self.client_secret = client_id, client_secret
         token = {}
-        if access_token and refresh_token:
+        if access_token:
             token.update({
                 'access_token': access_token,
                 'refresh_token': refresh_token
