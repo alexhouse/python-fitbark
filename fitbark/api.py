@@ -267,7 +267,7 @@ class FitBark(object):
         url = "{0}/v{1}/picture/user/{slug}".format(*self._get_common_args(), slug=slug)
         return self.make_request(url)
 
-    def user_related_dogs_get(self):
+    def dog_relations_get(self):
         url = "{0}/v{1}/dog_relations".format(*self._get_common_args())
         return self.make_request(url, root='dog_relations')
 
@@ -279,7 +279,7 @@ class FitBark(object):
         url = "{0}/v{1}/picture/dog/{slug}".format(*self._get_common_args(), slug=slug)
         return self.make_request(url)
 
-    def dog_related_users_get(self, slug):
+    def user_relations_get(self, slug):
         url = "{0}/v{1}/user_relations/{slug}".format(*self._get_common_args(), slug=slug)
         return self.make_request(url, root='user_relations')
 
