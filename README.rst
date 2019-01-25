@@ -1,5 +1,5 @@
 python-fitbark
-=============
+==============
 
 .. image:: https://travis-ci.org/alexhouse/python-fitbark.svg?branch=master
    :target: https://travis-ci.org/alexhouse/python-fitbark
