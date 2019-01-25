@@ -231,7 +231,7 @@ class FitBark(object):
         root = kwargs.pop('root')
 
         headers = kwargs.get('headers', {})
-        headers.update({'Accept-Language': self.system})
+        headers.update({'Accept-Language': self.system, 'Content-Type': 'application/json'})
         kwargs['headers'] = headers
 
         method = kwargs.get('method', 'PUT' if 'data' in kwargs else 'GET')
