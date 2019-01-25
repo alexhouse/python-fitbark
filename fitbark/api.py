@@ -13,7 +13,6 @@ from requests.auth import HTTPBasicAuth
 from requests_oauthlib import OAuth2Session
 
 from . import exceptions
-from .compliance import fitbark_compliance_fix
 from .utils import curry
 
 
@@ -45,13 +44,13 @@ class FitBarkOauth2Client(object):
             })
         if expires_at:
             token['expires_at'] = expires_at
-        self.session = fitbark_compliance_fix(OAuth2Session(
+        self.session = OAuth2Session(
             client_id,
             auto_refresh_url=self.refresh_token_url,
             token_updater=refresh_cb,
             token=token,
             redirect_uri=redirect_uri,
-        ))
+        )
         self.timeout = kwargs.get("timeout", None)
 
     def _request(self, method, url, **kwargs):
@@ -234,7 +233,7 @@ class FitBark(object):
         kwargs['headers'] = headers
         root = kwargs.get('root')
 
-        method = kwargs.get('method', 'POST' if 'data' in kwargs else 'GET')
+        method = kwargs.get('method', 'PUT' if 'data' in kwargs else 'GET')
         response = self.client.make_request(*args, **kwargs)
 
         if response.status_code == 202:
@@ -264,7 +263,7 @@ class FitBark(object):
 
         Returned as a base64 encoded string.
         """
-        url = "{0}/v{1}/picture/user/{2}".format(*self._get_common_args(slug))
+        url = "{0}/v{1}/picture/user/{slug}".format(*self._get_common_args(), slug=slug)
         return self.make_request(url)
 
     def user_related_dogs_get(self):
@@ -272,28 +271,68 @@ class FitBark(object):
         return self.make_request(url, root='dog_relations')
 
     def dog_get(self, slug):
-        url = "{0}/v{1}/dog/{2}".format(*self._get_common_args(slug))
+        url = "{0}/v{1}/dog/{slug}".format(*self._get_common_args(), slug=slug)
         return self.make_request(url, root='dog')
 
     def dog_picture_get(self, slug):
-        url = "{0}/v{1}/picture/dog/{2}".format(*self._get_common_args(slug))
+        url = "{0}/v{1}/picture/dog/{slug}".format(*self._get_common_args(), slug=slug)
         return self.make_request(url)
 
     def dog_related_users_get(self, slug):
-        url = "{0}/v{1}/user_relations/{2}".format(*self._get_common_args(slug))
+        url = "{0}/v{1}/user_relations/{slug}".format(*self._get_common_args(), slug=slug)
         return self.make_request(url, root='user_relations')
 
+    def daily_goal_get(self, slug):
+        url = "{0}/v{1}/daily_goal/{slug}".format(*self._get_common_args(), slug=slug)
+        return self.make_request(url, root='daily_goals')
+
+    def daily_goal_update(self, slug, data):
+        url = "{0}/v{1}/daily_goal/{slug}".format(*self._get_common_args(), slug=slug)
+        return self.make_request(url, data, root='daily_goals')
+
     def _get_common_args(self, user_id=None):
-        common_args = (self.API_ENDPOINT, self.API_VERSION,)
-        if not user_id:
-            user_id = '-'
-        common_args += (user_id,)
-        return common_args
+        return (self.API_ENDPOINT, self.API_VERSION,)
 
     def _get_date_string(self, date):
         if not isinstance(date, str):
             return date.strftime('%Y-%m-%d')
         return date
+
+    def activity_series_get(self, data):
+        today = datetime.date.today()
+        if not data['from']:
+            data['from'] = (today - datetime.timedelta(days=1)).strftime('%Y-%m-%d')
+        if not data['to']:
+            data['to'] = today.strftime('%Y-%m-%d')
+        if not data['resolution']:
+            data['resolution'] = 'DAILY'
+
+        url = "{0}/v{1}/activity_series".format(*self._get_common_args())
+        return self.make_request(url, data, method='POST', root='activity_series')
+
+    def dog_similar_stats_get(self, slug):
+        url = "{0}/v{1}/similar_dogs_stats".format(*self._get_common_args())
+        return self.make_request(url, method='POST', root='similar_dogs_stats', data={'slug': slug})
+
+    def activity_totals_get(self, data):
+        today = datetime.date.today()
+        if not data['from']:
+            data['from'] = (today - datetime.timedelta(days=1)).strftime('%Y-%m-%d')
+        if not data['to']:
+            data['to'] = today.strftime('%Y-%m-%d')
+
+        url = "{0}/v{1}/activity_totals".format(*self._get_common_args())
+        return self.make_request(url, method='POST', data={'dog': data})
+
+    def time_breakdown_get(self, data):
+        today = datetime.date.today()
+        if not data['from']:
+            data['from'] = (today - datetime.timedelta(days=1)).strftime('%Y-%m-%d')
+        if not data['to']:
+            data['to'] = today.strftime('%Y-%m-%d')
+
+        url = "{0}/v{1}/time_breakdown".format(*self._get_common_args())
+        return self.make_request(url, method='POST', root='activity_level', data={'dog': data})
 
     def _COLLECTION_RESOURCE(self, resource, date=None, user_id=None,
                              data=None):

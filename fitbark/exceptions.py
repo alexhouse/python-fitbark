@@ -8,13 +8,6 @@ class BadResponse(Exception):
     pass
 
 
-class DeleteError(Exception):
-    """
-    Used when a delete request did not return a 204
-    """
-    pass
-
-
 class Timeout(Exception):
     """
     Used when a timeout occurs.
