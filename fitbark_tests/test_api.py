@@ -177,6 +177,14 @@ class ResourceAccessTest(TestBase):
                              dict(slug=dog_slug, date_from=yesterday, date_to=today, resolution='DAILY'),
                              (URLBASE + 'activity_series', built_data,), {'method': 'POST'})
 
+        self.common_api_test('activity_series_get', (),
+                             dict(slug=dog_slug, date_from=yesterday, date_to=today, resolution='RANDOM'),
+                             (URLBASE + 'activity_series', built_data,), {'method': 'POST'})
+
+        self.common_api_test('activity_series_get', (),
+                             dict(slug=dog_slug, ),
+                             (URLBASE + 'activity_series', built_data,), {'method': 'POST'})
+
         built_data = {
             'activity_series': {
                 'slug': dog_slug,
@@ -187,6 +195,7 @@ class ResourceAccessTest(TestBase):
         }
         self.common_api_test('activity_series_get', (), dict(slug=dog_slug, date_from='2019-01-01'),
                              (URLBASE + 'activity_series', built_data,), {'method': 'POST'})
+
         self.verify_raises('activity_series_get', (), dict(slug=dog_slug, date_from=tomorrow), ValueError)
 
     def test_dog_similar_stats_get(self):
