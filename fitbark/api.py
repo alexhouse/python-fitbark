@@ -443,8 +443,3 @@ class FitBark(object):
 
         url = self._build_api_url("time_breakdown")
         return self.make_request(url, data, method='POST')
-
-    def _filter_nones(self, data):
-        filter_nones = lambda item: item[1] is not None
-        filtered_kwargs = list(filter(filter_nones, data.items()))
-        return {} if not filtered_kwargs else dict(filtered_kwargs)
