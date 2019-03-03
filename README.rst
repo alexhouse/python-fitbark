@@ -4,15 +4,12 @@ python-fitbark
 .. image:: https://travis-ci.org/alexhouse/python-fitbark.svg?branch=master
    :target: https://travis-ci.org/alexhouse/python-fitbark
    :alt: Build Status
-.. image:: https://coveralls.io/repos/alexhouse/python-fitbark/badge.png?branch=master
-   :target: https://coveralls.io/r/alexhouse/python-fitbark?branch=master
+.. image:: https://coveralls.io/repos/github/alexhouse/python-fitbark/badge.svg?branch=master
+   :target: https://coveralls.io/github/alexhouse/python-fitbark?branch=master
    :alt: Coverage Status
-.. image:: https://requires.io/github/alexhouse/python-fitbark/requirements.png?branch=master
+.. image:: https://requires.io/github/alexhouse/python-fitbark/requirements.svg?branch=master
    :target: https://requires.io/github/alexhouse/python-fitbark/requirements/?branch=master
    :alt: Requirements Status
-.. image:: https://badges.gitter.im/alexhouse/python-fitbark.png
-   :target: https://gitter.im/alexhouse/python-fitbark
-   :alt: Gitter chat
 
 FitBark API Python Client Implementation
 
