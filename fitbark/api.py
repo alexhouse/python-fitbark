@@ -228,7 +228,7 @@ class FitBark(object):
     def make_request(self, *args, **kwargs):
         # This should handle data level errors, improper requests, and bad
         # serialization
-        root = kwargs.pop('root')
+        root = kwargs.pop('root', None)
 
         headers = kwargs.get('headers', {})
         headers.update({'Accept-Language': self.system, 'Content-Type': 'application/json'})
@@ -316,10 +316,11 @@ class FitBark(object):
         return self.make_request(url, method='POST', root='similar_dogs_stats', data={'slug': slug})
 
     def activity_totals_get(self, data):
+        print(data)
         today = datetime.date.today()
-        if not data['from']:
+        if 'from' not in data:
             data['from'] = (today - datetime.timedelta(days=1)).strftime('%Y-%m-%d')
-        if not data['to']:
+        if 'to' not in data:
             data['to'] = today.strftime('%Y-%m-%d')
 
         url = "{0}/v{1}/activity_totals".format(*self._get_common_args())
